@@ -19,6 +19,7 @@ static NSCondition *condition = nil;
 @property (nonatomic, assign) NSInteger     count;
 @property (nonatomic, strong) NSThread      *thread;
 
+@property (nonatomic, weak) IBOutlet UITableView *tableView;
 @end
 
 @implementation ViewController
@@ -35,6 +36,9 @@ static NSCondition *condition = nil;
     
     UIButton *NSThread = [self createBtnWithTtitle:@"NSThread" selector:@selector(NSThread_test) frame:CGRectMake(space, space + btnHeight, btnWidth, btnHeight)];
     [self.view addSubview:NSThread];
+    
+    UIButton *perform = [self createBtnWithTtitle:@"preform" selector:@selector(performSelectorTest) frame:CGRectMake(space, space + btnHeight * 2, btnWidth, btnHeight)];
+    [self.view addSubview:perform];
 }
 
 #pragma mark - Event Response
@@ -46,10 +50,6 @@ static NSCondition *condition = nil;
 }
 
 - (void)NSThread_test {
-//    if(self.thread && (!self.thread.isFinished && !self.thread.isCancelled)) {
-//        [self.thread start];
-//        return;
-//    }
 //    //静态创建方法
     NSThread *thread1 = [[NSThread alloc] initWithBlock:^{
         for(int i = 0; i < 10; i++) {
@@ -73,10 +73,17 @@ static NSCondition *condition = nil;
 //    [thread2 start];
 }
 
+- (void)performSelectorTest {
+    NSLog(@"设置方法!!!");
+    [self performSelector:@selector(testMethod)
+               withObject:nil
+               afterDelay:3
+                  inModes:@[NSRunLoopCommonModes]];
+}
+
 #pragma mark - Logic Helper
 - (void)testMethod {
-    sleep(2);
-    NSLog(@"----");
+    NSLog(@"开始执行!!!");
 }
 
 - (UIButton *)createBtnWithTtitle:(NSString *)title selector:(SEL)selector frame:(CGRect)frame {

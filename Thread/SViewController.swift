@@ -19,6 +19,7 @@ class SViewController : UIViewController {
         let pThreadBtn = self.createBtn(title: "pthread", action: #selector(pThread_test), frame: CGRect(x: space, y: space, width: btnWidth, height: btnHeight))
         self.view.addSubview(pThreadBtn)
         self.view.addSubview(self.createBtn(title: "NSThread", action: #selector(NSThread_test), frame: CGRect(x: space, y: space +  btnHeight, width: btnWidth, height: btnHeight)));
+        self.view.addSubview(self.createBtn(title: "perform", action: #selector(performTest), frame: CGRect(x: space, y: space + btnHeight * 2, width: btnWidth, height: btnHeight)));
     }
     override func didReceiveMemoryWarning() {
         
@@ -87,6 +88,16 @@ class SViewController : UIViewController {
     }
     
     @objc private func testMethod() -> Void {
-        NSLog("method")
+        NSLog("开始调用!!!")
+    }
+    
+    @objc private func performTest() -> Void {
+        NSLog("设置方法!!!")
+        ///< 默认模式
+        self.perform(#selector(testMethod), with: nil, afterDelay: 3, inModes: [RunLoopMode.defaultRunLoopMode])
+        ///<UITrackingRunLoopMode
+        self.perform(#selector(testMethod), with: nil, afterDelay: 3, inModes: [RunLoopMode.UITrackingRunLoopMode])
+        ///<common
+        self.perform(#selector(testMethod), with: nil, afterDelay: 3, inModes: [RunLoopMode.commonModes])
     }
 }
