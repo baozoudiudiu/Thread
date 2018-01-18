@@ -18,7 +18,7 @@ class SViewController : UIViewController {
         let btnHeight: CGFloat = 50
         let pThreadBtn = self.createBtn(title: "pthread", action: #selector(pThread_test), frame: CGRect(x: space, y: space, width: btnWidth, height: btnHeight))
         self.view.addSubview(pThreadBtn)
-        self.view.addSubview(self.createBtn(title: "NSThread", action: #selector(NSThread_test), frame: CGRect(x: space, y: space * btnHeight, width: btnWidth, height: btnHeight)));
+        self.view.addSubview(self.createBtn(title: "NSThread", action: #selector(NSThread_test), frame: CGRect(x: space, y: space +  btnHeight, width: btnWidth, height: btnHeight)));
     }
     override func didReceiveMemoryWarning() {
         
@@ -68,7 +68,25 @@ class SViewController : UIViewController {
             }
         }
     }
+    //MARK: NSThread
     @objc private func NSThread_test() -> Void {
-        
+        let thread2 = Thread(block: {
+            for i in 0..<10 {
+                guard !Thread.current.isCancelled else {
+                    break;
+                }
+                print("\(i)")
+                if i == 5 {
+                    Thread.current.cancel()
+                }
+            }
+        })
+        thread2.start()
+        thread2.name = "threadName"
+        thread2.threadPriority = 0.8
+    }
+    
+    @objc private func testMethod() -> Void {
+        NSLog("method")
     }
 }

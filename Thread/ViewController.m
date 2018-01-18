@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+#import "NSArray+safe.h"
 //
 #import <pthread.h>
 #import "Thread-Swift.h"
@@ -17,6 +17,7 @@ static NSCondition *condition = nil;
 @interface ViewController ()
 
 @property (nonatomic, assign) NSInteger     count;
+@property (nonatomic, strong) NSThread      *thread;
 
 @end
 
@@ -45,17 +46,37 @@ static NSCondition *condition = nil;
 }
 
 - (void)NSThread_test {
-    //静态创建方法
+//    if(self.thread && (!self.thread.isFinished && !self.thread.isCancelled)) {
+//        [self.thread start];
+//        return;
+//    }
+//    //静态创建方法
     NSThread *thread1 = [[NSThread alloc] initWithBlock:^{
-        
+        for(int i = 0; i < 10; i++) {
+            NSLog(@"%d", i);
+            if(i == 5) {
+                [self performSelectorOnMainThread:@selector(testMethod) withObject:nil waitUntilDone:NO];
+            }
+            sleep(1);
+        }
     }];
-    
-    NSThread *thread2 = [[NSThread alloc] initWithTarget:self selector:@selector(testMethod) object:nil];
+//    self.thread = thread1;
+//    NSThread *thread2 = [[NSThread alloc] initWithTarget:self selector:@selector(testMethod) object:nil];
+//
+    [thread1 setName:@"blockThread"];
+//    [thread2 setName:@"targetThread"];
+//
+    [thread1 setThreadPriority:0.5];
+//    [thread2 setThreadPriority:0.8];
+//
+    [thread1 start];
+//    [thread2 start];
 }
 
 #pragma mark - Logic Helper
 - (void)testMethod {
-    
+    sleep(2);
+    NSLog(@"----");
 }
 
 - (UIButton *)createBtnWithTtitle:(NSString *)title selector:(SEL)selector frame:(CGRect)frame {
