@@ -30,7 +30,7 @@ static NSCondition *condition = nil;
     self.count = 1000;
     CGFloat btnWidth = 100;
     CGFloat btnHeight = 50;
-    CGFloat space = 20;
+    CGFloat space = 100;
     UIButton *pThreadBtn = [self createBtnWithTtitle:@"pThread" selector:@selector(pThread_test) frame:CGRectMake(space, space, btnWidth, btnHeight)];
     [self.view addSubview:pThreadBtn];
     
@@ -39,9 +39,18 @@ static NSCondition *condition = nil;
     
     UIButton *perform = [self createBtnWithTtitle:@"preform" selector:@selector(performSelectorTest) frame:CGRectMake(space, space + btnHeight * 2, btnWidth, btnHeight)];
     [self.view addSubview:perform];
+    
+    UIButton *gcdBtn = [self createBtnWithTtitle:@"GCD" selector:@selector(gcd_test) frame:CGRectMake(space, space + btnHeight * 3, btnWidth, btnHeight)];
+    [self.view addSubview:gcdBtn];
 }
 
 #pragma mark - Event Response
+- (void)gcd_test {
+    UIViewController *viewController = [[NSClassFromString(@"GCDViewController") alloc] init];
+    viewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
 - (void)pThread_test {
     self.count = 1000;
     for(int i = 0; i < 4; i++) {

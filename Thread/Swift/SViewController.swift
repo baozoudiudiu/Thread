@@ -13,17 +13,25 @@ let condition = NSCondition()
 class SViewController : UIViewController {
     //MARK: life cycle
     override func viewDidLoad() {
-        let space: CGFloat = 20
+        let space: CGFloat = 100
         let btnWidth: CGFloat = 100
         let btnHeight: CGFloat = 50
         let pThreadBtn = self.createBtn(title: "pthread", action: #selector(pThread_test), frame: CGRect(x: space, y: space, width: btnWidth, height: btnHeight))
         self.view.addSubview(pThreadBtn)
         self.view.addSubview(self.createBtn(title: "NSThread", action: #selector(NSThread_test), frame: CGRect(x: space, y: space +  btnHeight, width: btnWidth, height: btnHeight)));
         self.view.addSubview(self.createBtn(title: "perform", action: #selector(performTest), frame: CGRect(x: space, y: space + btnHeight * 2, width: btnWidth, height: btnHeight)));
+        self.view.addSubview(self.createBtn(title: "GCD", action: #selector(gcd_test), frame: CGRect(x: space, y: space + btnHeight * 3, width: btnWidth, height: btnHeight)));
     }
     override func didReceiveMemoryWarning() {
         
     }
+    
+    @objc private func gcd_test() -> Void {
+        let vc = SGCDViewController()
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     private func createBtn(title: String, action: Selector, frame: CGRect) -> UIButton {
         let button = UIButton(type: .system)
         button.addTarget(self, action: action, for: .touchUpInside)

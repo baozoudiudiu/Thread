@@ -14,6 +14,8 @@
 		662453A020044E7100984883 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6624539E20044E7100984883 /* LaunchScreen.storyboard */; };
 		662453A320044E7100984883 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 662453A220044E7100984883 /* main.m */; };
 		663512752004F5D900B63EDB /* SViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663512742004F5D900B63EDB /* SViewController.swift */; };
+		665044AF2011E76C005258C1 /* SGCDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665044AE2011E76C005258C1 /* SGCDViewController.swift */; };
+		665AB7D32011E531009AC52B /* GCDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 665AB7D22011E531009AC52B /* GCDViewController.m */; };
 		66BC7B75200F3A0900A7AEC6 /* NSArray+safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BC7B74200F3A0900A7AEC6 /* NSArray+safe.m */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +32,9 @@
 		662453A220044E7100984883 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		663512732004F5D800B63EDB /* Thread-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Thread-Bridging-Header.h"; sourceTree = "<group>"; };
 		663512742004F5D900B63EDB /* SViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SViewController.swift; sourceTree = "<group>"; };
+		665044AE2011E76C005258C1 /* SGCDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SGCDViewController.swift; sourceTree = "<group>"; };
+		665AB7D12011E531009AC52B /* GCDViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDViewController.h; sourceTree = "<group>"; };
+		665AB7D22011E531009AC52B /* GCDViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCDViewController.m; sourceTree = "<group>"; };
 		66BC7B73200F3A0900A7AEC6 /* NSArray+safe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+safe.h"; sourceTree = "<group>"; };
 		66BC7B74200F3A0900A7AEC6 /* NSArray+safe.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+safe.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,11 +69,12 @@
 		6624539220044E7100984883 /* Thread */ = {
 			isa = PBXGroup;
 			children = (
+				665044AD2011E74E005258C1 /* Swift */,
+				665044AC2011E5E5005258C1 /* ViewController */,
 				6624539320044E7100984883 /* AppDelegate.h */,
 				6624539420044E7100984883 /* AppDelegate.m */,
 				6624539620044E7100984883 /* ViewController.h */,
 				6624539720044E7100984883 /* ViewController.m */,
-				663512742004F5D900B63EDB /* SViewController.swift */,
 				6624539920044E7100984883 /* Main.storyboard */,
 				6624539C20044E7100984883 /* Assets.xcassets */,
 				6624539E20044E7100984883 /* LaunchScreen.storyboard */,
@@ -79,6 +85,24 @@
 				66BC7B74200F3A0900A7AEC6 /* NSArray+safe.m */,
 			);
 			path = Thread;
+			sourceTree = "<group>";
+		};
+		665044AC2011E5E5005258C1 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				665AB7D12011E531009AC52B /* GCDViewController.h */,
+				665AB7D22011E531009AC52B /* GCDViewController.m */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		665044AD2011E74E005258C1 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				663512742004F5D900B63EDB /* SViewController.swift */,
+				665044AE2011E76C005258C1 /* SGCDViewController.swift */,
+			);
+			path = Swift;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,6 +178,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				6624539820044E7100984883 /* ViewController.m in Sources */,
+				665AB7D32011E531009AC52B /* GCDViewController.m in Sources */,
+				665044AF2011E76C005258C1 /* SGCDViewController.swift in Sources */,
 				66BC7B75200F3A0900A7AEC6 /* NSArray+safe.m in Sources */,
 				662453A320044E7100984883 /* main.m in Sources */,
 				663512752004F5D900B63EDB /* SViewController.swift in Sources */,
