@@ -15,6 +15,8 @@ static NSString *cellId = @"cellId";
 
 //Data
 @property (nonatomic, strong) NSArray     *dataSource;
+
+@property (nonatomic, assign) NSInteger tickets;
 @end
 
 @implementation GCDViewController
@@ -24,6 +26,7 @@ static NSString *cellId = @"cellId";
     // Do any additional setup after loading the view.
     [self configureUI];
     [self demoCode];
+    self.tickets = 10000;
 }
 
 #pragma mark - Configure UI
@@ -87,6 +90,18 @@ static NSString *cellId = @"cellId";
             [self barrier];
         }
             break;
+        case 7: {
+            [self suspend];
+        }
+            break;
+        case 8: {
+            [self apply];
+        }
+            break;
+        case 9: {
+            [self semaphore];
+        }
+            break;
         default:
             break;
     }
@@ -95,6 +110,69 @@ static NSString *cellId = @"cellId";
 #pragma mark - Logic Helper
 - (void)demoCode {
     
+}
+
+- (void)semaphore {
+    //信号量使用之一: 异步转同步
+    dispatch_queue_t queue = dispatch_queue_create("queue_label", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    __block NSInteger i = 0;
+    dispatch_async(queue, ^{
+        i = 100;
+        dispatch_semaphore_signal(semaphore);
+    });
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    NSLog(@"%ld", i);
+    
+    //信号量使用之二: 线程锁
+    dispatch_async(queue, ^{
+        while (self.tickets > 0) {
+            self.tickets--;
+            NSLog(@"111 -> %ld", self.tickets);
+        }
+    });
+    
+    dispatch_async(queue, ^{
+        while (self.tickets > 0) {
+            self.tickets--;
+            NSLog(@"222 -> %ld", self.tickets);
+        }
+    });
+}
+
+- (void)apply {
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_apply(10, queue, ^(size_t index) {
+        NSLog(@"%zd", index);
+    });
+    NSLog(@"遍历结束 !!!");
+}
+
+- (void)suspend {
+    dispatch_queue_t queue = dispatch_queue_create("com.test.gcd", DISPATCH_QUEUE_SERIAL);
+    //提交第一个block，延时5秒打印。
+    dispatch_async(queue, ^{
+        [NSThread sleepForTimeInterval:5];
+        NSLog(@"五秒后打印，队列挂起时已经开始执行，");
+    });
+    //提交第二个block，也是延时5秒打印
+    dispatch_async(queue, ^{
+        [NSThread sleepForTimeInterval:5];
+        NSLog(@"队列挂起时未执行，需恢复队列后在执行");
+    });
+    //延时一秒
+    NSLog(@"立刻打印~~~~~~~");
+    [NSThread sleepForTimeInterval:1];
+    //挂起队列
+    NSLog(@"一秒后打印，队列挂起");
+    dispatch_suspend(queue);
+    //延时10秒
+    [NSThread sleepForTimeInterval:11];
+    NSLog(@"十秒后打印，开启队列");
+    //恢复队列
+    dispatch_resume(queue);
 }
 
 - (void)barrier {
@@ -273,14 +351,15 @@ static NSString *cellId = @"cellId";
                             @"调度组:同步任务",
                             @"调度组:异步任务",
                             @"栅栏",
-                            @"挂起"];
+                            @"挂起&恢复",
+                            @"Apply",
+                            @"信号量"];
     }
     return _dataSource;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end
