@@ -29,6 +29,7 @@ class SGCDViewController : UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureUI()
+        self.demoCode()
     }
     //MARK: Configure UI
     private func configureUI() {
@@ -53,6 +54,21 @@ class SGCDViewController : UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func demoCode() -> Void {
+        
+        /*
+         label: 队列标记
+         qos: 优先级
+         attributes: 队列相关一些设置比如(是否是并行队列,是否手动执行任务还是自动执行任务)
+         autoreleaseFrequency:
+         target:
+         */
+        let queue = DispatchQueue(label: "com.test.id", qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .workItem, target: nil);
+        queue.sync {
+            print("hello friend");
+        }
     }
     
     //MARK: 内存警告

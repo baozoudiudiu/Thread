@@ -23,6 +23,7 @@ static NSString *cellId = @"cellId";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self configureUI];
+    [self demoCode];
 }
 
 #pragma mark - Configure UI
@@ -74,12 +75,127 @@ static NSString *cellId = @"cellId";
             [self async_concurrent];
         }
             break;
+        case 4: {
+            [self group_test];
+        }
+            break;
+        case 5: {
+            [self group_asynBlock];
+        }
+            break;
+        case 6: {
+            [self barrier];
+        }
+            break;
         default:
             break;
     }
 }
 
 #pragma mark - Logic Helper
+- (void)demoCode {
+    
+}
+
+- (void)barrier {
+    NSInteger count = 3;
+    dispatch_queue_t queue = dispatch_queue_create("queue_label", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_async(queue, ^{
+        for(int i = 0; i < count; i++) {
+            NSLog(@"Thread1 --> %d", i);
+        }
+    });
+    
+    dispatch_async(queue, ^{
+        for(int i = 0; i < count; i++) {
+            NSLog(@"Thread2 --> %d", i);
+        }
+    });
+    
+    dispatch_barrier_async(queue, ^{
+        for(int i = 0; i < count; i++) {
+            NSLog(@"barrier --> %d", i);
+        }
+    });
+    
+    dispatch_async(queue, ^{
+        for(int i = 0; i < count; i++) {
+            NSLog(@"Thread3 --> %d", i);
+        }
+    });
+}
+
+- (void)group_asynBlock {
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_group_t group = dispatch_group_create();
+    NSLog(@"group 开始执行 !!!");
+   
+    dispatch_group_enter(group);
+    dispatch_group_async(group, queue, ^{
+        NSLog(@"block1 begin !!!");
+        [self request:1 block:^{
+            dispatch_group_leave(group);
+        }];
+        NSLog(@"block1 end !!!");
+    });
+    
+    dispatch_group_enter(group);
+    dispatch_group_async(group, queue, ^{
+        NSLog(@"block2 begin !!!");
+        [self request:2 block:^{
+            dispatch_group_leave(group);
+        }];
+        NSLog(@"block2 end !!!");
+    });
+    
+    dispatch_group_enter(group);
+    dispatch_group_async(group, queue, ^{
+        NSLog(@"block3 begin !!!");
+        [self request:3 block:^{
+            dispatch_group_leave(group);
+        }];
+        NSLog(@"block3 end !!!");
+    });
+    dispatch_group_notify(group, queue, ^{
+        NSLog(@"group 结束 !!!");
+    });
+}
+
+- (void)request:(NSInteger)count block:(void(^)(void))complete{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSLog(@"请求%ld 开始 !!!", count);
+        [NSThread sleepForTimeInterval:3];
+         NSLog(@"请求%ld 结束 !!!", count);
+        if(complete)
+            complete();
+    });
+}
+
+- (void)group_test {
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_group_t group = dispatch_group_create();
+    NSLog(@"调度组开始执行!!!");
+    dispatch_group_async(group, queue, ^{
+        for(int i = 0; i < 6; i++) {
+            NSLog(@"thread1 -> %d", i);
+        }
+    });
+    dispatch_group_async(group, queue, ^{
+        for(int i = 0; i < 6; i++) {
+            NSLog(@"thread2 -> %d", i);
+        }
+    });
+    
+    dispatch_group_async(group, queue, ^{
+        for(int i = 0; i < 6; i++) {
+            NSLog(@"thread3 -> %d", i);
+        }
+    });
+    dispatch_group_notify(group, queue, ^{
+        NSLog(@"所有循环执行完毕!!!");
+    });
+}
+
 - (void)sync_serial {
     NSLog(@"mian_start");
     dispatch_queue_t queue = dispatch_queue_create("111", DISPATCH_QUEUE_SERIAL);
@@ -153,7 +269,11 @@ static NSString *cellId = @"cellId";
         self.dataSource = @[@"同步串行",
                             @"同步并行",
                             @"异步串行",
-                            @"异步并行"];
+                            @"异步并行",
+                            @"调度组:同步任务",
+                            @"调度组:异步任务",
+                            @"栅栏",
+                            @"挂起"];
     }
     return _dataSource;
 }
