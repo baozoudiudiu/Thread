@@ -26,7 +26,7 @@ static NSString *cellId = @"cellId";
     // Do any additional setup after loading the view.
     [self configureUI];
     [self demoCode];
-    self.tickets = 10000;
+    self.tickets = 1000;
 }
 
 #pragma mark - Configure UI
@@ -127,17 +127,32 @@ static NSString *cellId = @"cellId";
     NSLog(@"%ld", i);
     
     //信号量使用之二: 线程锁
+    dispatch_semaphore_signal(semaphore);
     dispatch_async(queue, ^{
-        while (self.tickets > 0) {
-            self.tickets--;
-            NSLog(@"111 -> %ld", self.tickets);
+        while (1) {
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+            if (self.tickets > 0) {
+                self.tickets -= 1;
+                NSLog(@"111 -> %ld", self.tickets);
+                dispatch_semaphore_signal(semaphore);
+            }else {
+                dispatch_semaphore_signal(semaphore);
+                break;
+            }
         }
     });
     
     dispatch_async(queue, ^{
-        while (self.tickets > 0) {
-            self.tickets--;
-            NSLog(@"222 -> %ld", self.tickets);
+        while (1) {
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+            if (self.tickets > 0) {
+                self.tickets -= 1;
+                NSLog(@"222 -> %ld", self.tickets);
+                dispatch_semaphore_signal(semaphore);
+            }else {
+                dispatch_semaphore_signal(semaphore);
+                break;
+            }
         }
     });
 }
